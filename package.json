@@ -1,0 +1,29 @@
+{
+  "name": "draft-civil-desktop",
+  "productName": "Draft Civil Desktop",
+  "version": "0.5.0",
+  "description": "Offline civil drafting, parcels, terrain and plan sheets for Windows desktop.",
+  "author": "Draft Civil project",
+  "private": true,
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check desktop/main.cjs && node --check desktop/preload.cjs && node --check ui/app.js",
+    "package:win": "node scripts/vendor-pdf.mjs && node scripts/package.mjs win32 x64",
+    "package:linux": "node scripts/package.mjs linux x64",
+    "package:mac": "node scripts/package.mjs darwin arm64",
+    "postinstall": "install-electron && node scripts/vendor-pdf.mjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "45.2.1"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "pdfjs-dist": "6.4.299"
+  }
+}
