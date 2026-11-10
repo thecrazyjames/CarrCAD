@@ -1,0 +1,10 @@
+import {packager} from '@electron/packager';
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const platform=process.argv[2]||process.platform,arch=process.argv[3]||process.arch;
+if(!['win32','linux','darwin'].includes(platform)||!['x64','arm64'].includes(arch))throw Error('Supported targets: win32/linux/darwin, x64/arm64.');
+const pkg=JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8'));
+const paths=await packager({dir:root,out:path.join(root,'release'),name:'Draft Civil Desktop',executableName:'DraftCivil',platform,arch,electronVersion:pkg.devDependencies.electron,appVersion:pkg.version,overwrite:true,asar:false,prune:true,ignore:[/^\/release(?:\/|$)/,/^\/node_modules(?:\/|$)/,/^\/tests(?:\/|$)/,/^\/scripts(?:\/|$)/,/^\/\.git(?:\/|$)/,/^\/\.github(?:\/|$)/,/^\/package-lock\.json$/,/^\/.*\.(zip|log)$/,/^\/START_WINDOWS\.cmd$/],win32metadata:{CompanyName:'Draft Civil project',FileDescription:'Draft Civil Desktop',ProductName:'Draft Civil Desktop',InternalName:'DraftCivil',OriginalFilename:'DraftCivil.exe'}});
+for(let p of paths)console.log(p);
